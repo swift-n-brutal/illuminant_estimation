@@ -9,4 +9,4 @@
 ```
 matlab -nojvm -nodisplay -nosplash -r 'process_gs568'
 ```
-3. Randomly split the images into three subsets for cross validation. Here we provide an example: [set\_0][gs568/set_0.txt], [set\_1][gs568/set_1.txt] and [set\_2][gs568/set_2.txt].
+3. Randomly split the images into three subsets for cross validation. Here we provide an example: [set\_0](gs568/set_0.txt), [set\_1](gs568/set_1.txt) and [set\_2](gs568/set_2.txt).
