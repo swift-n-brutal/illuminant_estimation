@@ -1,9 +1,9 @@
 [//]: <links>
 [proj]: http://mmlab.ie.cuhk.edu.hk/projects/illuminant_estimation.html
 [gs568]: http://www.cs.sfu.ca/~colour/data/shi_gehler/
-[data]: https://github.com/swift-n-brutal/illuminant_estimation/data/
-[models]: https://github.com/swift-n-brutal/illuminant_estimation/models/
-[preds]: https://github.com/swift-n-brutal/illuminant_estimation/preds/ 
+[data]: ./data/
+[models]: ./models/
+[preds]: ./preds/ 
 
 # Illuminant Estimation
 
