@@ -9,16 +9,16 @@
     ```
     matlab -nojvm -nodisplay -nosplash -r 'process_gs568'
     ```
-Please prepare your raw data as follows and change `DATA_DIR` in the script accordingly:
-```
---- DATA_DIR
-     |- png
-     |   |- xxx.png
-     |- groundtruth_568
-     |   |- real_illum_568..mat
-     |- coordinates
-         |- xxx_macbeth.txt
-```
+    Please prepare your raw data as follows and change `DATA_DIR` in the script accordingly:
+    ```
+    --- DATA_DIR
+         |- png
+         |   |- xxx.png
+         |- groundtruth_568
+         |   |- real_illum_568..mat
+         |- coordinates
+             |- xxx_macbeth.txt
+    ```
     NOTE: Each binary file begins with three int32 values representing height (h), width (w) and number of channels (c) respectively, and is followed by h\*w\*c float32 values in the order of matlab.
 
 3. Randomly split the images into three subsets for cross validation. Here we provide an example: [set\_0](gs568/set_0.txt), [set\_1](gs568/set_1.txt) and [set\_2](gs568/set_2.txt).
