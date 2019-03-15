@@ -9,14 +9,15 @@ else
     DATA_DIR = 'path\to\gs568_dataset\';
 end
 
-RESULT_DIR = 'gs568';
+RESULT_DIR = ['gs568' filesep];
 if ~exist(RESULT_DIR, 'dir')
     mkdir(RESULT_DIR);
 end
 
-load([DATA_DIR 'groundtruth_568\real_illum_568..mat']); % real_rgb - ground truth of illumination
+load([DATA_DIR 'groundtruth_568' filesep 'real_illum_568..mat']); % real_rgb - ground truth of illumination
 
-LIST_FILES = textread([DATA_DIR 'filelist.txt'], '%s');
+%LIST_FILES = textread([DATA_DIR 'filelist.txt'], '%s'); % filelist.txt is not found in the raw dataset. 
+LIST_FILES = dir([DATA_DIR 'png' filesep '*.png']);
 BLACK = 129; %  [117 122 117];
 test_set = [1:568];
 save_binary = true;
@@ -28,7 +29,9 @@ fprintf(fileID, '%d\nname r g b\n', length(test_set));
 for i = 1:length(test_set)
     id = test_set(i)
     
-    filename = [char(LIST_FILES(id,:))];
+    %filename = [char(LIST_FILES(id,:))];
+    filename = [char(LIST_FILES(id).name(1:end-4))];
+    fprintf('(%d/%d) %s\n', i, length(test_set), filename);
   
     if bits == 8
         if gamma == 1
@@ -54,6 +57,7 @@ for i = 1:length(test_set)
     % do image processing on  input_im
     % ...   
 	% save the image in RGB format
+    Lrgb = real_rgb(id,:);
 	fprintf(fileID, '%s %.1f %.1f %.1f\n', filename, Lrgb(1), Lrgb(2), Lrgb(3));
 	input_im = single(input_im);
 	if save_binary

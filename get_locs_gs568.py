@@ -2,28 +2,34 @@ import numpy as np
 import os, os.path as osp
 from gs568_dataset import GS568Dataset
 
-def get_all_locs(ds, psize, stride, save_dir='.'):
+def get_all_locs(ds, psize, stride, save_dir='.', drop_last=False):
     size = ds.size()
     for i in xrange(size):
         name = ds.get_name(i)
         shape = ds.get_shape(i)
         img, _ = ds.get(i)
         locs = list()
+        if drop_last:
+            has_last_col = False
+            has_last_row = False
+        else:
+            has_last_col = ((shape[1]-psize) % stride) > 0
+            has_last_row = ((shape[0]-psize) % stride) > 0
         for y in xrange(0, shape[0]-psize, stride):
             for x in xrange(0, shape[1]-psize, stride):
                 if np.all(img[y:y+psize, x:x+psize, :]):
                     locs.append([y, y+psize, x, x+psize])
-            if ((shape[1]-psize) % stride) > 0:
+            if has_last_col:
                 # last column
                 if np.all(img[y:y+psize, shape[1]-psize:shape[1], :]):
                     locs.append([y, y+psize, shape[1]-psize, shape[1]])
-        if ((shape[0]-psize) % stride) > 0:
+        if has_last_row:
             # last row
             y = shape[0] - psize
             for x in xrange(0, shape[1]-psize, stride):
                 if np.all(img[y:y+psize, x:x+psize, :]):
                     locs.append([y, y+psize, x, x+psize])
-            if ((shape[1]-psize) % stride) > 0:
+            if has_last_col:
                 # last column
                 if np.all(img[y:y+psize, shape[1]-psize:shape[1], :]):
                     locs.append([y, y+psize, shape[1]-psize, shape[1]])
@@ -46,6 +52,7 @@ def main():
     args = vars(args)
     #
     ds_train = GS568Dataset('train', args, False)
+    ds_train._transformer = None # Disable random flipping
     ds_test = GS568Dataset('test', args, False)
     psize = args['size']
     stride = args['stride']
