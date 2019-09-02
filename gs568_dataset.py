@@ -27,6 +27,13 @@ def _get_transformer(phase, to_uv):
 
 class GS568Dataset(Dataset):
     def __init__(self, phase, args, to_uv=True, cache=True, name='gs568_dataset'):
+        """
+        Parameters
+        ----------
+        cache : bool
+            Whether to load all images into memory. Set cache=False if your memory
+            is not large enough to fit your data. 
+        """
         Dataset.__init__(self, args, name)
         self._cache = cache
         assert phase == 'train' or phase == 'test' or phase == 'all', \
@@ -34,6 +41,7 @@ class GS568Dataset(Dataset):
         self._phase = phase
         self._transformer = _get_transformer(phase, to_uv)
         self._illum_transformer = ToUV() if to_uv else None
+        self._folder = args["gs_folder"]
     
     def _load_names(self, path):
         names = list()
@@ -96,7 +104,10 @@ class GS568Dataset(Dataset):
     def _get(self, idx):
         if idx.dtype.names is None:
             # idx is a scalar
-            img = self._data[idx]
+            if self._cache:
+                img = self._data[idx]
+            else:
+                img = self._load_bin(osp.join(self._folder, self._names[idx] + EXT_BIN))
             illum = self._illums[idx]
         else:
             # idx is a structured array
@@ -105,7 +116,11 @@ class GS568Dataset(Dataset):
             if idx['loc'].size == 1:
                 # loc represents the index of locs
                 loc = self._locs[img_idx][loc]
-            img = self._data[img_idx][loc[0]:loc[1], loc[2]:loc[3], :]
+            if self._cache:
+                img = self._data[img_idx][loc[0]:loc[1], loc[2]:loc[3], :]
+            else:
+                img = self._load_bin(osp.join(self._folder, self._names[img_idx] + EXT_BIN))
+                img = img[loc[0]:loc[1], loc[2]:loc[3], :]
             illum = self._illums[img_idx]
         if self._transformer is not None:
             img = self._transformer(img)
