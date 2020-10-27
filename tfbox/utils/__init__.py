@@ -1,1 +1,1 @@
-from seed import gen_seed
+from .seed import gen_seed

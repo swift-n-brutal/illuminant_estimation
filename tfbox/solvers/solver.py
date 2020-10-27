@@ -53,11 +53,11 @@ class Solver(object):
             load_dir = self.save_dir
         try:
             load_path = self.restore(sess, saver, load_dir, global_step=global_step)
-            print 'Restored from', load_path
+            print('Restored from', load_path)
         except:
             sess.run(tf.global_variables_initializer())
             save_path = self.save(sess, saver, self.save_dir)
-            print 'Initialization done. Saved to', save_path
+            print('Initialization done. Saved to', save_path)
 
     def setup(self):
         raise NotImplementedError
@@ -87,7 +87,7 @@ class Solver(object):
             else:
                 basename = "%s-%d" % (basename, global_step)
         load_path = osp.join(load_dir, basename)
-        print "Try to restore from", load_path
+        print("Try to restore from", load_path)
         saver.restore(sess, load_path)
         return load_path
 

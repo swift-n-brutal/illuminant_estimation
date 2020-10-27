@@ -29,14 +29,14 @@ def get_median(preds):
 def get_confidence_weights(img, locs):
     weights = np.zeros(locs.shape[0], dtype=np.float32)
     minchn = np.min(img, axis=-1)
-    for i in xrange(locs.shape[0]):
+    for i in range(locs.shape[0]):
         weights[i] = np.mean(minchn[locs[i][0]:locs[i][1], locs[i][2]:locs[i][3]])
     return weights / np.max(weights)
     
 def get_weighted_median(preds, weights):
     n, c = preds.shape
     weighted_median = np.zeros(c)
-    for i in xrange(c):
+    for i in range(c):
         temp = zip(preds[:,i], weights)
         sorted_pw = sorted(temp, key=lambda x: x[0])
         sorted_p, sorted_w = zip(*sorted_pw)
@@ -50,14 +50,14 @@ def get_weighted_median(preds, weights):
 def get_selected_preds(hyp_preds, logits):
     n_preds = hyp_preds.shape[0]
     sel_idx = np.argmax(logits, axis=1)
-    return hyp_preds[xrange(n_preds), sel_idx]
+    return hyp_preds[range(n_preds), sel_idx]
 
 def test_split(args, test_set_id):
     args['gs_test_set'] = test_set_id
     ds = GS568Dataset('test', args, to_uv=False)
     n_imgs = ds.size()
     ae_list = list()
-    for i in xrange(n_imgs):
+    for i in range(n_imgs):
         img, illum = ds.get(np.array(i))
         name = ds.get_name(i)
         data = np.load(osp.join(args['pred_dir'], name+'.npz'))
@@ -70,8 +70,8 @@ def test_split(args, test_set_id):
         else:
             pred = get_median(preds)
         ae = compute_angular_error(pred, illum)
-        print '%s %.4f' % (name, ae),
-        print pred, illum / illum[1]
+        print('%s %.4f' % (name, ae),
+                pred, illum / illum[1])
         ae_list.append(ae)
     return ae_list
 
@@ -95,7 +95,7 @@ def print_errors(ae_all):
            'l25':e_l25,
            'h25':e_h25}
     for (k,v) in err_all.items():
-        print k, ":", v
+        print(k, ":", v)
     return err_all
         
 def main():
@@ -107,7 +107,7 @@ def main():
     if test_set_id in [0, 1, 2]:
         ae_list += test_split(args, test_set_id)
     else:
-        for i in xrange(3):
+        for i in range(3):
             ae_list += test_split(args, i)
     ae_arr = np.array(ae_list)
     print_errors(ae_arr)

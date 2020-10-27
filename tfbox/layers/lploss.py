@@ -17,7 +17,7 @@ class LpLoss(Layer):
             if samplewise:
                 rank = len(eltwise.shape.as_list())
                 if rank > 1:
-                    self.outputs.append(tf.reduce_mean(eltwise, axis=range(1,rank) ))
+                    self.outputs.append(tf.reduce_mean(eltwise, axis=list(range(1,rank)) ))
                 else:
                     self.outputs.append(eltwise)
             else:

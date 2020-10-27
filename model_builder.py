@@ -79,7 +79,7 @@ class BaseNet(object):
         with tf.variable_scope(name):
             bottoms = model.append(Act(inputs[-1], config, name='act'))
             outputs = list()
-            for b in xrange(self._branches):
+            for b in range(self._branches):
                 with tf.variable_scope('b%d' % b):
                     tops = model.append(Linear(bottoms[-1], 256,
                                                name='fc1', filler=filler))

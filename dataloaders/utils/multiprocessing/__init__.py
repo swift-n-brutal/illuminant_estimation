@@ -1,1 +1,1 @@
-from queues import *
+from .queues import *

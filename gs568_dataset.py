@@ -50,7 +50,7 @@ class GS568Dataset(Dataset):
             line = fin.readline().strip('\n\r')
             n_names = int(line)
             line = fin.readline().strip('\n\r') # header: name r g b
-            for i in xrange(n_names):
+            for i in range(n_names):
                 line = fin.readline().strip('\n\r')
                 name, r, g, b = line.split(' ')
                 names.append(name)
@@ -75,12 +75,12 @@ class GS568Dataset(Dataset):
         args = self._args
         folder = args['gs_folder']
         if self._phase == 'train':
-            set_ids = range(3)
+            set_ids = list(range(3))
             set_ids.remove(args['gs_test_set'])
         elif self._phase == 'test':
             set_ids = [args['gs_test_set']]
         else:
-            set_ids = range(3)
+            set_ids = list(range(3))
         # load names and ground truth
         names, illums = list(), list()
         for i in set_ids:

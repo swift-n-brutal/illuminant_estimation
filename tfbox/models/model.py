@@ -94,7 +94,7 @@ class Model(object):
     def load_model(self, sess, path):
         if path[-4:] != '.npz':
             path += '.npz'
-        with np.load(path) as fd:
+        with np.load(path, allow_pickle=True) as fd:
             param_dict = fd['params'][()]
             update_param_dict = fd['update_params'][()]
             for layer in self.layers:

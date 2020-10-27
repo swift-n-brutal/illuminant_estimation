@@ -31,13 +31,13 @@ class GS568BatchSerialSampler(Sampler):
         rand = np.random.RandomState(self._seed)
         if self._patches_per_image is None:
             # self._locs stores the length of indices
-            for i in xrange(self._n_images):
+            for i in range(self._n_images):
                 n_locs = len(self._dataset.get_loc(i))
                 self._locs.append(n_locs)
                 self._size += n_locs
         else:
             # self._locs stores the array of indices
-            for i in xrange(self._n_images):
+            for i in range(self._n_images):
                 n_locs = len(self._dataset.get_loc(i))
                 self._locs.append(
                     rand.choice(n_locs, self._patches_per_image, replace=self._replace))
@@ -69,7 +69,7 @@ class GS568BatchSerialSampler(Sampler):
     def _sample(self):
         ret = list()
         try:
-            for _ in xrange(self._batch_size):
+            for _ in range(self._batch_size):
                 ret.append(self._get_next())
         except StopIteration:
             if self._keep_last and len(ret) > 0:
@@ -105,7 +105,7 @@ class GS568BatchRandomSampler(Sampler):
         self._n_images = self._dataset.size()
         self._size = 0
         self._locs = list()
-        for i in xrange(self._n_images):
+        for i in range(self._n_images):
             n_locs = len(self._dataset.get_loc(i))
             self._locs.append(n_locs)
             self._size += n_locs
@@ -118,4 +118,4 @@ class GS568BatchRandomSampler(Sampler):
     def _sample(self):
         img_idx = self._rand.choice(self._n_images, size=self._batch_size, replace=self._replace)
         loc_idx = [self._rand.randint(self._locs[ii]) for ii in img_idx]
-        return np.array(zip(img_idx, loc_idx), dtype=self._dtype).reshape(self._batch_shape)
+        return np.array(list(zip(img_idx, loc_idx)), dtype=self._dtype).reshape(self._batch_shape)

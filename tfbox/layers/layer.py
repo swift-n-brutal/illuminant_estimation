@@ -19,6 +19,6 @@ class Layer(object):
         
     def print_info(self, verbose):
         if verbose:
-            print self.name
-            print '\tIn', self.inputs
-            print '\tOut', self.outputs
+            print(self.name)
+            print('\tIn', self.inputs)
+            print('\tOut', self.outputs)

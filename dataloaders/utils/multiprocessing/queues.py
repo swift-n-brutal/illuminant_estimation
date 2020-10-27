@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from multiprocessing import current_process
-from Queue import Empty
+from queue import Empty
 from time import time
 import zmq
 import numpy as np
@@ -119,7 +119,7 @@ class ZMQQueue(object):
             result = {}
         for meta in metas:
             msg = self._socket.recv()
-            buf = buffer(msg)
+            buf = memoryview(msg)
             dtype = np.dtype(eval(meta['dtype']))
             buffer_dtype = get_buffer_dtype(dtype)
             a = np.frombuffer(buf, dtype=buffer_dtype).astype(dtype)

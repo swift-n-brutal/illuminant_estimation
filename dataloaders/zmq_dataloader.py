@@ -222,7 +222,7 @@ class ZMQDataLoader(DataLoader):
         if type(seeds) is not list:
             seeds = [seeds]*n_proc
         prev_n_proc = len(self._data_processes)
-        for i in xrange(n_proc):
+        for i in range(n_proc):
             p = Process(name='/%s/data%d' % (self.name, prev_n_proc + i),
                         target=_worker,
                         args=(iq, dq, [self._dataset, self._transformer], True,
@@ -259,7 +259,7 @@ class ZMQDataLoader(DataLoader):
         for dp in self._data_processes:
             if dp.is_alive():
                 dp.join()
-            print "Joined", dp.name
+            print("Joined", dp.name)
         self._data_processes = list()
         # terminate the index process
         if self._index_process is not None:
@@ -277,11 +277,11 @@ class ZMQDataLoader(DataLoader):
             self._index_process.terminate()
             if self._index_process.is_alive():
                 self._index_process.join()
-            print "Joined", self._index_process.name
+            print("Joined", self._index_process.name)
             self._index_process = None
         self._initialized = False
             
     def __del__(self):
-        print "Del", self.name
+        print("Del", self.name)
         if self._initialized:
             self.join_all()

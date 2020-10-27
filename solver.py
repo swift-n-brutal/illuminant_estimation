@@ -12,7 +12,7 @@ from tfbox.layers import LpLoss, Accuracy
 try:
     from dataloaders.zmq_dataloader import ZMQDataLoader as DataLoader
 except ImportError:
-    print 'ZeroMQ is not detected. It is recommended for efficient training.'
+    print('ZeroMQ is not detected. It is recommended for efficient training.')
     from dataloaders.zmq_dataloader import DataLoader
 
 from gs568_dataset import GS568Dataset as Dataset
@@ -35,7 +35,7 @@ def dict_div(a, b):
 
 def print_dict(d):
     for k in sorted(d.keys()):
-        print k, ':', d[k]
+        print(k, ':', d[k])
         
 def strf(f):
     s = str(f)
@@ -103,8 +103,8 @@ class GS568Solver(Solver):
         # model builder
         hypnet = HypNet(branches)
         selnet = SelNet(branches)
-        for device_id in xrange(1):
-            print "~~~~~~~~ Device %d ~~~~~~~~" % device_id
+        for device_id in range(1):
+            print("~~~~~~~~ Device %d ~~~~~~~~" % device_id)
             with tf.device('/%cpu:%d' % ('c' if args['cpu_only'] else 'g', device_id)):
                 ######
                 # model
@@ -126,7 +126,7 @@ class GS568Solver(Solver):
                     loss_hypsel = LpLoss(pred_sel, illums, 2, name='loss_hypsel').outputs[-1]
                     # hypnet
                     loss_branch = list()
-                    for b in xrange(branches):
+                    for b in range(branches):
                         loss_branch.append(
                             LpLoss(pred_branch[b], illums, 2,
                                    samplewise=True, name='loss_b%d' % b).outputs[-1])
@@ -255,7 +255,7 @@ class GS568Solver(Solver):
         timer = Timeline()
         
         timer.tic('train')
-        for itr in xrange(args['mxit'] + 1):
+        for itr in range(args['mxit'] + 1):
             if itr >= args['lr_update_after'] and (itr - args['lr_update_after']) % args['lr_update_every'] == 0:
                 lr *= args['lr_decay']
             # test
@@ -263,14 +263,14 @@ class GS568Solver(Solver):
                 timer.tic('test')
                 val = self.test(itr)
                 self.writer.add_summary(val['summary'], itr)
-                print 'Test [%d](%.2f)' % (itr, timer.toc('test')),
-                print 'lhyp: %.4e|' % val['loss_hypnet'],
-                print 'lsel: %.4e|' % val['loss_selnet'],
-                print 'asel: %.4f|' % val['acc_selnet'],
-                print 'lhs: %.4e|' % val['loss_hypsel'],
-                print 'sel0: %.4f|' % val['sel_zero'],
-                print 'wta0: %.4f|' % val['wta_zero'],
-                print 'lr: %.4e|' % lr
+                print('Test [%d](%.2f)' % (itr, timer.toc('test')),
+                    'lhyp: %.4e|' % val['loss_hypnet'],
+                    'lsel: %.4e|' % val['loss_selnet'],
+                    'asel: %.4f|' % val['acc_selnet'],
+                    'lhs: %.4e|' % val['loss_hypsel'],
+                    'sel0: %.4f|' % val['sel_zero'],
+                    'wta0: %.4f|' % val['wta_zero'],
+                    'lr: %.4e|' % lr)
             # snapshot
             if itr > 0 and itr % args['ssit'] == 0:
                 timer.tic('snap')
@@ -279,19 +279,19 @@ class GS568Solver(Solver):
                         osp.join(self.save_dir, 'hypnet_%d.npz' % itr))
                 self.model_selnet.save_model(self.sess,
                         osp.join(self.save_dir, 'selnet_%d.npz' % itr))
-                print 'Snapshot (%.2f)' % timer.toc('snap')
+                print('Snapshot (%.2f)' % timer.toc('snap'))
             # train
             val = self.step(lr)
             self.writer.add_summary(val['summary'], itr)
             # display
             if itr > 0 and itr % args['dpit'] == 0:
-                print '[%d](%.2f)' % (itr, timer.tic('train')),
-                print 'lhyp: %.4e|' % val['loss_hypnet'],
-                print 'lsel: %.4e|' % val['loss_selnet'],
-                print 'asel: %.4f|' % val['acc_selnet'],
-                print 'lhs: %.4e|' % val['loss_hypsel'],
-                print 'sel0: %.4f|' % val['sel_zero'],
-                print 'wta0: %.4f|' % val['wta_zero']
+                print('[%d](%.2f)' % (itr, timer.tic('train')),
+                    'lhyp: %.4e|' % val['loss_hypnet'],
+                    'lsel: %.4e|' % val['loss_selnet'],
+                    'asel: %.4f|' % val['acc_selnet'],
+                    'lhs: %.4e|' % val['loss_hypsel'],
+                    'sel0: %.4f|' % val['sel_zero'],
+                    'wta0: %.4f|' % val['wta_zero'])
                 
     def test(self, itr):
         args = self.args
@@ -358,7 +358,7 @@ class GS568Solver(Solver):
             if transformer is not None:
                 pred = transformer.inverse(pred)
             logits = fetch_val['sel_logits']
-            for i in xrange(n_imgs):
+            for i in range(n_imgs):
                 img_idx, loc_idx = idx[i]
                 pred_hyp[img_idx].append(pred[:,i,:])
                 sel_logits[img_idx].append(logits[i,:])
@@ -366,7 +366,7 @@ class GS568Solver(Solver):
             count += n_imgs 
             if int(count / step) != prog:
                 prog = int(count / step)
-                print '[%.2f%%,%d/%d](%.2f)' % (count * 100. / size, count, size, timer.tic('test'))
+                print('[%.2f%%,%d/%d](%.2f)' % (count * 100. / size, count, size, timer.tic('test')))
         #
         if not osp.exists(args['test_dir']):
             os.makedirs(args['test_dir'])
@@ -378,7 +378,7 @@ class GS568Solver(Solver):
                      preds=np.array(pred_hyp[img_idx], dtype=NP_DTYPE),
                      logits=np.array(sel_logits[img_idx], dtype=NP_DTYPE),
                      locs=locs)
-        print 'Done(%.2f)' % (timer.toc('test'))
+        print('Done(%.2f)' % (timer.toc('test')))
         
     @staticmethod
     def get_parser(ps=None):
@@ -433,9 +433,9 @@ def main():
             else:
                 solver.train()
         except KeyboardInterrupt:
-            print 'Interrupted by user'
+            print('Interrupted by user')
         except:
-            print 'Unexpected error'
+            print('Unexpected error')
             traceback.print_exc()
             
 if __name__ == '__main__':

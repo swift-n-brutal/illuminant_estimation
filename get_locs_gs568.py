@@ -4,7 +4,7 @@ from gs568_dataset import GS568Dataset
 
 def get_all_locs(ds, psize, stride, save_dir='.', drop_last=False):
     size = ds.size()
-    for i in xrange(size):
+    for i in range(size):
         name = ds.get_name(i)
         shape = ds.get_shape(i)
         img, _ = ds.get(i)
@@ -15,8 +15,8 @@ def get_all_locs(ds, psize, stride, save_dir='.', drop_last=False):
         else:
             has_last_col = ((shape[1]-psize) % stride) > 0
             has_last_row = ((shape[0]-psize) % stride) > 0
-        for y in xrange(0, shape[0]-psize, stride):
-            for x in xrange(0, shape[1]-psize, stride):
+        for y in range(0, shape[0]-psize, stride):
+            for x in range(0, shape[1]-psize, stride):
                 if np.all(img[y:y+psize, x:x+psize, :]):
                     locs.append([y, y+psize, x, x+psize])
             if has_last_col:
@@ -26,7 +26,7 @@ def get_all_locs(ds, psize, stride, save_dir='.', drop_last=False):
         if has_last_row:
             # last row
             y = shape[0] - psize
-            for x in xrange(0, shape[1]-psize, stride):
+            for x in range(0, shape[1]-psize, stride):
                 if np.all(img[y:y+psize, x:x+psize, :]):
                     locs.append([y, y+psize, x, x+psize])
             if has_last_col:
@@ -36,7 +36,7 @@ def get_all_locs(ds, psize, stride, save_dir='.', drop_last=False):
         # save locs
         np.save(osp.join(save_dir, name), \
                 np.array(locs, dtype=np.int32))
-        print i, name, shape, len(locs)
+        print(i, name, shape, len(locs))
 
 def get_parser(ps=None):
     ps = GS568Dataset.get_parser(ps)
@@ -59,9 +59,9 @@ def main():
     save_dir = args['save_dir']
     if not osp.exists(save_dir):
         os.makedirs(save_dir)
-    print '    Train    '
+    print('    Train    ')
     get_all_locs(ds_train, psize, stride, save_dir)
-    print '    test    '
+    print('    test    ')
     get_all_locs(ds_test, psize, stride, save_dir)
 
 if __name__ == '__main__':
