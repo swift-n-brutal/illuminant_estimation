@@ -90,18 +90,19 @@ class GS568Dataset(Dataset):
         self._names = names
         self._illums = illums
         self._size = len(names)
-        # if cache, load all images
-        if self._cache:
-            data = list()
-            for nm in names:
-                data.append(self._load_bin(osp.join(folder, nm + EXT_BIN)))
-            self._data = data
+        self._data = None
         # if has_loc, load locations of all valid patches
         self._locs = None
         if args['gs_has_loc']:
             self._locs = self._load_locs(args['gs_loc_folder'], names)
     
     def _get(self, idx):
+        # if cache, load all images
+        if self._cache and self._data is None:
+            data = list()
+            for nm in self._names:
+                data.append(self._load_bin(osp.join(self._args['gs_folder'], nm + EXT_BIN)))
+            self._data = data
         if idx.dtype.names is None:
             # idx is a scalar
             if self._cache:

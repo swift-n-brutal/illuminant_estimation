@@ -282,7 +282,8 @@ class GS568Solver(Solver):
                 print('Snapshot (%.2f)' % timer.toc('snap'))
             # train
             val = self.step(lr)
-            self.writer.add_summary(val['summary'], itr)
+            if itr > 0 and itr % 10 == 0:
+                self.writer.add_summary(val['summary'], itr)
             # display
             if itr > 0 and itr % args['dpit'] == 0:
                 print('[%d](%.2f)' % (itr, timer.tic('train')),
@@ -390,7 +391,7 @@ class GS568Solver(Solver):
         g.add_argument('--name', type=str, default='gs568')
         g.add_argument('--patch-size', type=int, default=44)
         g.add_argument('--batch-size', type=int, default=64)
-        g.add_argument('--nproc', type=int, default=2)
+        g.add_argument('--nproc', type=int, default=1)
         g.add_argument('--lr', type=float, default=0.02)
         g.add_argument('--mom', type=float, default=0.9)
         g.add_argument('--mom2', type=float, default=0.99)
