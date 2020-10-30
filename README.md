@@ -4,6 +4,8 @@
 [data]: ./data/
 [models]: ./models/
 [preds]: ./preds/ 
+[pretrained_3fd]: https://mycuhk-my.sharepoint.com/:u:/g/personal/1155067722_link_cuhk_edu_hk/Ee4oEhBopxxMka2XXHjkjsoBTvqAGL6-oBqOzwVtSD4whg?e=27AiVW
+[pretrained_all]: https://mycuhk-my.sharepoint.com/:u:/g/personal/1155067722_link_cuhk_edu_hk/EX-CcOPFjwJOvMoWaNzxrFcBmuigT-UHOgnBrH3tZ6aeZw?e=aDth61
 
 # Illuminant Estimation
 
@@ -43,6 +45,13 @@ CUDA_VISIBLE_DEVICES=0 python solver.py --gs-has-loc --gs-test-set 0 --test-only
 CUDA_VISIBLE_DEVICES=1 python solver.py --gs-has-loc --gs-test-set 1 --test-only &
 CUDA_VISIBLE_DEVICES=2 python solver.py --gs-has-loc --gs-test-set 2 --test-only &
 ```
+### Pre-trained models
+Pre-trained models can be downloaded from the following links. Please unzip the files inside [models][models]
+|Link|Description|
+|---|---|
+|[OneDrive][pretrained_3fd]|Trained for 3-fold cross validation|
+|[OneDrive][pretrained_all]|Trained on all images|
+
 The estimated illuminants for local patches of each image will be stored in [preds][preds]. Finally run the following command to get global predictions for each image:
 ```
 python test_preds.py --weighted-median
