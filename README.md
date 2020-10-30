@@ -11,6 +11,11 @@
 
 This project implements the illuminant estimation method which is presented in the paper "Deep Specialized Network for Illuminant Estimation" [Project][proj]. The implementation is based on Python and TensorFlow.
 
+## Prerequisites
+* python=3.6
+* tensorflow=1.14
+* pyzmq=19.0.1 (optional)
+
 ## Training from scratch
 
 We take the training procedure on [Gehler-Shi][gs568] dataset as example. Please first follow the instructions in [data][data] to preprocess the data. Then run the following commands to train three models, as the performance should be evaluated by 3-fold cross validation.
@@ -46,7 +51,7 @@ CUDA_VISIBLE_DEVICES=1 python solver.py --gs-has-loc --gs-test-set 1 --test-only
 CUDA_VISIBLE_DEVICES=2 python solver.py --gs-has-loc --gs-test-set 2 --test-only &
 ```
 ### Pre-trained models
-Pre-trained models can be downloaded from the following links. Please unzip the files inside [models][models]
+Pre-trained models can be downloaded from the following links. Please unzip the files inside [models][models].
 |Link|Description|
 |---|---|
 |[OneDrive][pretrained_3fd]|Trained for 3-fold cross validation|
