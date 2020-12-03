@@ -133,7 +133,8 @@ class GS568Dataset(Dataset):
         return self._names[idx]
     
     def get_shape(self, idx):
-        return self._data[idx].shape
+        img = self._get(idx)[0]
+        return img.shape
     
     def get_loc(self, idx):
         return self._locs[idx]
